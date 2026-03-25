@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Tajemná komnata – rozhodování</title>
 <style>
-  :root {
+  :root{
     --gold:#d8b86b;
     --gold-2:#f1dfb2;
     --ink:#0b1320;
@@ -13,32 +13,35 @@
     --text:#f6f0df;
     --muted:#d9d0b7;
     --shadow:0 18px 44px rgba(0,0,0,.42);
+    --green:#44ff88;
+    --yellow:#ffd84d;
+    --red:#ff5c5c;
   }
 
-  * { box-sizing:border-box; }
-  html, body { margin:0; padding:0; }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
 
-  body {
+  body{
     min-height:100vh;
-    font-family: Georgia, "Times New Roman", serif;
+    font-family:Georgia, "Times New Roman", serif;
     color:var(--text);
     background:
-      linear-gradient(rgba(5,10,18,.30), rgba(5,10,18,.80)),
-      radial-gradient(circle at 50% 8%, rgba(255,222,150,.12), transparent 20%),
+      linear-gradient(rgba(5,10,18,.30), rgba(5,10,18,.82)),
+      radial-gradient(circle at 50% 8%, rgba(255,222,150,.10), transparent 20%),
       #07111a;
     overflow-x:hidden;
   }
 
-.header-image {
-  position: relative;
-  height: 560px;
-  background:
-    linear-gradient(rgba(4,8,15,.08), rgba(4,8,15,.38)),
-    url("header.png") center top / cover no-repeat;
-  box-shadow: 0 24px 60px rgba(0,0,0,.45);
-}
+  .header-image{
+    position:relative;
+    height:560px;
+    background:
+      linear-gradient(rgba(4,8,15,.08), rgba(4,8,15,.38)),
+      url("header.png") center top / cover no-repeat;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
 
-  .header-overlay {
+  .header-overlay{
     position:absolute;
     inset:0;
     background:
@@ -47,7 +50,7 @@
     pointer-events:none;
   }
 
-  .mist {
+  .mist{
     position:fixed;
     left:-10%;
     right:-10%;
@@ -60,14 +63,14 @@
     z-index:0;
   }
 
-  .mist.m2 {
+  .mist.m2{
     bottom:120px;
     height:180px;
     opacity:.6;
     animation-duration:18s;
   }
 
-  .glow {
+  .glow{
     position:fixed;
     inset:0;
     pointer-events:none;
@@ -78,7 +81,7 @@
     z-index:0;
   }
 
-  .sparkles {
+  .sparkles{
     position:fixed;
     inset:0;
     pointer-events:none;
@@ -86,7 +89,7 @@
     overflow:hidden;
   }
 
-  .sparkle {
+  .sparkle{
     position:absolute;
     width:4px;
     height:4px;
@@ -97,7 +100,7 @@
     opacity:.8;
   }
 
-  .wrap {
+  .wrap{
     max-width:1220px;
     margin:0 auto;
     padding:18px 18px 42px;
@@ -105,7 +108,7 @@
     z-index:2;
   }
 
-  .hero {
+  .hero{
     margin-top:-120px;
     text-align:center;
     padding:0 10px 8px;
@@ -113,7 +116,7 @@
     z-index:3;
   }
 
-  h1 {
+  h1{
     margin:0;
     color:var(--gold);
     font-size:clamp(2.3rem,4vw,3.9rem);
@@ -121,9 +124,9 @@
     font-weight:700;
   }
 
-  .quote-bar {
+  .quote-bar{
     margin:18px auto 0;
-    max-width:880px;
+    max-width:900px;
     padding:14px 18px;
     background:linear-gradient(180deg, rgba(14,22,34,.90), rgba(9,15,24,.96));
     border:1px solid rgba(216,184,107,.30);
@@ -137,7 +140,7 @@
     flex-wrap:wrap;
   }
 
-  .pill-row {
+  .pill-row{
     margin-top:18px;
     display:flex;
     gap:16px;
@@ -145,7 +148,7 @@
     justify-content:center;
   }
 
-  .pill {
+  .pill{
     padding:12px 22px;
     border-radius:999px;
     background:linear-gradient(180deg, rgba(15,23,34,.90), rgba(9,15,24,.96));
@@ -156,7 +159,20 @@
     backdrop-filter:blur(5px);
   }
 
-  .section-title {
+  .mode-switch{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-top:20px;
+    flex-wrap:wrap;
+  }
+
+  .mode-switch button.active{
+    box-shadow:0 0 20px rgba(255,215,120,.6);
+    transform:scale(1.05);
+  }
+
+  .section-title{
     margin:30px 0 14px;
     color:var(--gold-2);
     font-size:1.9rem;
@@ -164,44 +180,44 @@
     text-shadow:0 2px 12px rgba(0,0,0,.25);
   }
 
-  .grid {
+  .grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:26px;
     margin-top:18px;
   }
 
-  .card {
-  background:linear-gradient(180deg, rgba(7,13,21,.78), rgba(6,12,20,.86));
-  border:2px solid rgba(216,184,107,.45);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 18px 44px rgba(0,0,0,.42);
-  backdrop-filter:blur(5px);
-  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-}
+  .card{
+    background:linear-gradient(180deg, rgba(7,13,21,.78), rgba(6,12,20,.86));
+    border:2px solid rgba(187,204,226,.62);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(5px);
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
 
-  .card:hover {
+  .card:hover{
     transform:translateY(-8px);
     box-shadow:0 24px 58px rgba(0,0,0,.5), 0 0 28px rgba(216,184,107,.12);
     border-color:rgba(216,184,107,.55);
   }
 
-  .card-head {
-  display:grid;
-  grid-template-columns:1.12fr .88fr;
-  min-height:226px;
-  border-bottom:1px solid rgba(229,208,151,.16);
-  background:
-    linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.24)),
-    linear-gradient(135deg, rgba(52,40,28,.78), rgba(18,40,41,.78));
-}
+  .card-head{
+    display:grid;
+    grid-template-columns:1.12fr .88fr;
+    min-height:226px;
+    border-bottom:1px solid rgba(229,208,151,.16);
+    background:
+      linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.24)),
+      linear-gradient(135deg, rgba(52,40,28,.78), rgba(18,40,41,.78));
+  }
 
-  .head-text {
+  .head-text{
     padding:16px 18px 12px;
   }
 
-  .eyebrow {
+  .eyebrow{
     display:flex;
     align-items:center;
     gap:10px;
@@ -210,7 +226,7 @@
     margin-bottom:8px;
   }
 
-  .icon-chip {
+  .icon-chip{
     width:28px;
     height:28px;
     border-radius:50%;
@@ -222,7 +238,7 @@
     flex:0 0 auto;
   }
 
-  .card h2 {
+  .card h2{
     margin:0 0 8px;
     color:var(--gold-2);
     font-size:clamp(1.35rem, 1.8vw, 1.9rem);
@@ -230,20 +246,20 @@
     text-shadow:0 2px 12px rgba(0,0,0,.25);
   }
 
-  .question {
+  .question{
     font-size:1rem;
     color:#f4ecd3;
     margin-bottom:8px;
     line-height:1.5;
   }
 
-  .small-label {
+  .small-label{
     font-size:.95rem;
     color:var(--gold);
     margin-bottom:4px;
   }
 
-  .options {
+  .options{
     margin:0;
     padding-left:22px;
     line-height:1.65;
@@ -251,34 +267,51 @@
     font-size:.98rem;
   }
 
-  .options li::marker {
+  .options li::marker{
     color:var(--gold);
   }
 
-  .art {
-  display:grid;
-  place-items:center;
-  padding:10px;
-  border-left:1px solid rgba(229,208,151,.14);
-  background:
-    radial-gradient(circle at 70% 30%, rgba(255,220,140,.12), transparent 26%),
-    linear-gradient(135deg, rgba(23,34,45,.95), rgba(58,41,24,.92));
-}
+  .art{
+    display:grid;
+    place-items:center;
+    padding:10px;
+    border-left:1px solid rgba(229,208,151,.14);
+    background:
+      radial-gradient(circle at 70% 30%, rgba(255,220,140,.12), transparent 26%),
+      linear-gradient(135deg, rgba(23,34,45,.95), rgba(58,41,24,.92));
+  }
 
+  .art svg{
+    width:100%;
+    height:100%;
+    max-height:208px;
+    display:block;
+    filter:drop-shadow(0 12px 18px rgba(0,0,0,.30));
+  }
 
- .art svg {
-  width:100%;
-  height:100%;
-  max-height:208px;
-  display:block;
-  filter:drop-shadow(0 12px 18px rgba(0,0,0,.30));
-}
+  .prophecy-options{
+    display:none;
+    margin-top:12px;
+  }
 
-  .note-wrap {
+  .prophecy-options button{
+    display:block;
+    width:100%;
+    margin:6px 0;
+    text-align:left;
+    padding:10px 14px;
+  }
+
+  .prophecy-options button.selected{
+    box-shadow:0 0 18px rgba(255,215,120,.45);
+    border:1px solid rgba(255,215,120,.45);
+  }
+
+  .note-wrap{
     padding:16px 16px 18px;
   }
 
-  textarea {
+  textarea{
     width:100%;
     min-height:122px;
     resize:vertical;
@@ -292,14 +325,14 @@
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
   }
 
-  .controls {
+  .controls{
     display:flex;
     gap:12px;
     margin-top:12px;
     flex-wrap:wrap;
   }
 
-  button {
+  button{
     border:none;
     border-radius:999px;
     padding:12px 18px;
@@ -312,12 +345,12 @@
     transition:transform .15s ease, filter .15s ease;
   }
 
-  button:hover {
+  button:hover{
     transform:translateY(-1px);
     filter:brightness(1.04);
   }
 
-  .help-box {
+  .help-box{
     margin-top:28px;
     padding:18px 20px;
     background:rgba(8,14,20,.72);
@@ -327,62 +360,238 @@
     backdrop-filter:blur(4px);
   }
 
-  .help-box h3 {
+  .help-box h3{
     color:var(--gold);
     margin:0 0 10px;
   }
 
-  .help-box p, .help-box li {
+  .help-box p, .help-box li{
     color:var(--muted);
     line-height:1.7;
   }
 
-  .help-columns {
+  .help-columns{
     display:grid;
     grid-template-columns:1fr 1fr 1fr;
     gap:20px;
     margin-top:14px;
   }
 
-  @keyframes mistMove {
-    from { transform:translateX(-2%); }
-    to { transform:translateX(2%); }
+  .result-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(5,10,18,.82);
+    backdrop-filter:blur(6px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    padding:20px;
   }
 
-  @keyframes glowPulse {
-    0%,100% { opacity:.45; }
-    50% { opacity:.9; }
+  .result-overlay.show{
+    display:flex;
+    animation:fadeIn .5s ease;
   }
 
-  @keyframes twinkle {
-    0%,100% { opacity:.15; transform:scale(.7); }
-    50% { opacity:1; transform:scale(1.5); }
+  .result-box{
+    width:min(920px, 96vw);
+    background:linear-gradient(180deg, rgba(10,18,29,.96), rgba(7,12,20,.98));
+    border:2px solid rgba(216,184,107,.45);
+    border-radius:22px;
+    box-shadow:0 0 40px rgba(216,184,107,.18), 0 24px 60px rgba(0,0,0,.45);
+    padding:28px 24px;
+    text-align:center;
+    color:#f6f0df;
+    animation:prophecyRise .7s ease;
   }
-  
-  @media (max-width: 930px) {
-  .grid{grid-template-columns:1fr}
-  .hero{margin-top:-70px}
-  .help-columns{grid-template-columns:1fr}
-}
 
-@media (max-width: 640px) {
-  .header-image{height:420px}
-  .card-head{grid-template-columns:1fr}
-  .art{
-    border-left:none;
-    border-top:1px solid rgba(229,208,151,.14);
-    min-height:180px;
+  .result-box h2{
+    color:#f1dfb2;
+    font-size:2rem;
+    margin:0 0 18px;
   }
-  .pill-row{gap:10px}
-  .pill{padding:10px 14px}
-}
-    .art {
+
+  .wheel-wrap{
+    display:flex;
+    justify-content:center;
+    margin:10px 0 22px;
+  }
+
+  .magic-wheel{
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    position:relative;
+    box-shadow:
+      0 0 30px rgba(255,255,255,.06),
+      0 0 40px rgba(216,184,107,.12);
+  }
+
+  .magic-wheel::after{
+    content:"";
+    position:absolute;
+    inset:18px;
+    border-radius:50%;
+    background:rgba(8,14,20,.92);
+    box-shadow:inset 0 0 25px rgba(255,255,255,.04);
+  }
+
+  .magic-wheel-center{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+    flex-direction:column;
+    font-weight:700;
+  }
+
+  .magic-wheel-center .main-role{
+    color:#f1dfb2;
+    font-size:1.15rem;
+    max-width:120px;
+    line-height:1.2;
+  }
+
+  .magic-wheel-center .small{
+    color:#d9d0b7;
+    font-size:.9rem;
+    margin-top:6px;
+  }
+
+  .role-legend{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+
+  .role-legend span{
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:.95rem;
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-top:20px;
+    text-align:left;
+  }
+
+  .stat{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:14px;
+  }
+
+  .stat-label{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    color:#f1dfb2;
+    font-weight:700;
+  }
+
+  .bar{
+    height:12px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+
+  .bar-fill{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    transition:width 1.1s ease;
+    box-shadow:0 0 14px currentColor;
+  }
+
+  .result-comment{
+    margin-top:22px;
+    font-size:1.05rem;
+    line-height:1.7;
+    color:#f6f0df;
+  }
+
+  .result-actions{
+    margin-top:22px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+
+  .close-result{
+    background:linear-gradient(180deg, #ead8a7, #cdaa57);
+    color:#241d12;
+  }
+
+  .restart-prophecy{
+    background:linear-gradient(180deg, #d7f0dc, #8dc99e);
+    color:#17301d;
+  }
+
+  @keyframes mistMove{
+    from{transform:translateX(-2%)}
+    to{transform:translateX(2%)}
+  }
+
+  @keyframes glowPulse{
+    0%,100%{opacity:.45}
+    50%{opacity:.9}
+  }
+
+  @keyframes twinkle{
+    0%,100%{opacity:.15; transform:scale(.7)}
+    50%{opacity:1; transform:scale(1.5)}
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+  }
+
+  @keyframes prophecyRise{
+    from{
+      opacity:0;
+      transform:translateY(30px) scale(.96);
+    }
+    to{
+      opacity:1;
+      transform:translateY(0) scale(1);
+    }
+  }
+
+  @media (max-width: 930px){
+    .grid{grid-template-columns:1fr}
+    .hero{margin-top:-70px}
+    .help-columns{grid-template-columns:1fr}
+  }
+
+  @media (max-width: 700px){
+    .stats{grid-template-columns:1fr}
+    .magic-wheel{width:220px;height:220px}
+  }
+
+  @media (max-width: 640px){
+    .header-image{height:420px}
+    .card-head{grid-template-columns:1fr}
+    .art{
       border-left:none;
       border-top:1px solid rgba(229,208,151,.14);
       min-height:180px;
     }
-    .pill-row { gap:10px; }
-    .pill { padding:10px 14px; }
+    .pill-row{gap:10px}
+    .pill{padding:10px 14px}
   }
 </style>
 </head>
@@ -407,6 +616,11 @@
       <div class="pill">✨ kouzlo</div>
       <div class="pill">📝 poznámky</div>
     </div>
+
+    <div class="mode-switch">
+      <button id="modeRoles" class="active">🎭 Hrát s rolemi</button>
+      <button id="modeProphecy">🔮 Nechat rozhodnout proroctví</button>
+    </div>
   </section>
 
   <h2 class="section-title">⚡ Hypotetické situace – Tajemná komnata + reálný život</h2>
@@ -427,26 +641,15 @@
             <li>schovám si ho pro sebe</li>
             <li>pokusím se zjistit jeho původ</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">budu si do něj psát a zkoumat ho</button>
+            <button onclick="selectAnswer(this,1)">někomu ho ukážu</button>
+            <button onclick="selectAnswer(this,2)">schovám si ho pro sebe</button>
+            <button onclick="selectAnswer(this,3)">pokusím se zjistit jeho původ</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#3b2a1d"/>
-                <stop offset="100%" stop-color="#16222a"/>
-              </linearGradient>
-              <linearGradient id="cov1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#7f512e"/>
-                <stop offset="100%" stop-color="#432616"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg1)"/>
-            <rect x="86" y="34" width="88" height="102" rx="8" fill="url(#cov1)" transform="rotate(12 130 85)"/>
-            <rect x="98" y="44" width="62" height="82" rx="6" fill="#94653f" opacity=".55" transform="rotate(12 130 85)"/>
-            <path d="M111 59 L149 67" stroke="#d9b87b" stroke-width="3" stroke-linecap="round"/>
-            <path d="M117 76 L154 84" stroke="#d9b87b" stroke-width="2" opacity=".8" stroke-linecap="round"/>
-            <circle cx="210" cy="34" r="16" fill="#d8b86b" opacity=".18"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3b2a1d"/><stop offset="100%" stop-color="#16222a"/></linearGradient><linearGradient id="cov1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7f512e"/><stop offset="100%" stop-color="#432616"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg1)"/><rect x="86" y="34" width="88" height="102" rx="8" fill="url(#cov1)" transform="rotate(12 130 85)"/><rect x="98" y="44" width="62" height="82" rx="6" fill="#94653f" opacity=".55" transform="rotate(12 130 85)"/><path d="M111 59 L149 67" stroke="#d9b87b" stroke-width="3" stroke-linecap="round"/><path d="M117 76 L154 84" stroke="#d9b87b" stroke-width="2" opacity=".8" stroke-linecap="round"/><circle cx="210" cy="34" r="16" fill="#d8b86b" opacity=".18"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -469,29 +672,15 @@
             <li>řeknu to učiteli</li>
             <li>využiju to ve svůj prospěch</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">půjdu za tím hlasem</button>
+            <button onclick="selectAnswer(this,1)">budu to ignorovat</button>
+            <button onclick="selectAnswer(this,2)">řeknu to učiteli</button>
+            <button onclick="selectAnswer(this,3)">využiju to ve svůj prospěch</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1d3130"/>
-                <stop offset="100%" stop-color="#12201d"/>
-              </linearGradient>
-              <radialGradient id="g2" cx="70%" cy="50%" r="40%">
-                <stop offset="0%" stop-color="#b2ff93"/>
-                <stop offset="60%" stop-color="#5bc96a" stop-opacity=".75"/>
-                <stop offset="100%" stop-color="#5bc96a" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg2)"/>
-            <g opacity=".35" stroke="#6e8178">
-              <path d="M0 42 H260"/><path d="M0 80 H260"/><path d="M0 118 H260"/>
-              <path d="M43 0 V160"/><path d="M87 0 V160"/><path d="M130 0 V160"/><path d="M173 0 V160"/><path d="M216 0 V160"/>
-            </g>
-            <circle cx="190" cy="80" r="46" fill="url(#g2)"/>
-            <path d="M156 96 C172 68, 192 64, 206 80 C220 94, 236 94, 244 84" fill="none" stroke="#88f59a" stroke-width="7" stroke-linecap="round"/>
-            <circle cx="244" cy="84" r="4" fill="#b2ffbb"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1d3130"/><stop offset="100%" stop-color="#12201d"/></linearGradient><radialGradient id="g2" cx="70%" cy="50%" r="40%"><stop offset="0%" stop-color="#b2ff93"/><stop offset="60%" stop-color="#5bc96a" stop-opacity=".75"/><stop offset="100%" stop-color="#5bc96a" stop-opacity="0"/></radialGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg2)"/><g opacity=".35" stroke="#6e8178"><path d="M0 42 H260"/><path d="M0 80 H260"/><path d="M0 118 H260"/><path d="M43 0 V160"/><path d="M87 0 V160"/><path d="M130 0 V160"/><path d="M173 0 V160"/><path d="M216 0 V160"/></g><circle cx="190" cy="80" r="46" fill="url(#g2)"/><path d="M156 96 C172 68, 192 64, 206 80 C220 94, 236 94, 244 84" fill="none" stroke="#88f59a" stroke-width="7" stroke-linecap="round"/><circle cx="244" cy="84" r="4" fill="#b2ffbb"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -514,24 +703,15 @@
             <li>využiju chaosu</li>
             <li>hledám viníka</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">snažím se pomoct</button>
+            <button onclick="selectAnswer(this,1)">bojím se a držím se stranou</button>
+            <button onclick="selectAnswer(this,2)">využiju chaosu</button>
+            <button onclick="selectAnswer(this,3)">hledám viníka</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#12242f"/>
-                <stop offset="100%" stop-color="#1f382d"/>
-              </linearGradient>
-              <radialGradient id="violet3" cx="62%" cy="50%" r="35%">
-                <stop offset="0%" stop-color="#d7a4ff"/>
-                <stop offset="100%" stop-color="#7e58b3" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg3)"/>
-            <circle cx="156" cy="80" r="48" fill="url(#violet3)" opacity=".8"/>
-            <path d="M140 48 q16 -14 38 0 q18 11 14 32 q-5 30 -34 39 q-30 -7 -37 -31 q-6 -25 19 -40z" fill="#8d63c7" stroke="#d6c0ff" stroke-width="3"/>
-            <path d="M126 88 q32 16 64 0" stroke="#d6c0ff" stroke-width="2.4" opacity=".8"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#12242f"/><stop offset="100%" stop-color="#1f382d"/></linearGradient><radialGradient id="violet3" cx="62%" cy="50%" r="35%"><stop offset="0%" stop-color="#d7a4ff"/><stop offset="100%" stop-color="#7e58b3" stop-opacity="0"/></radialGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg3)"/><circle cx="156" cy="80" r="48" fill="url(#violet3)" opacity=".8"/><path d="M140 48 q16 -14 38 0 q18 11 14 32 q-5 30 -34 39 q-30 -7 -37 -31 q-6 -25 19 -40z" fill="#8d63c7" stroke="#d6c0ff" stroke-width="3"/><path d="M126 88 q32 16 64 0" stroke="#d6c0ff" stroke-width="2.4" opacity=".8"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -554,21 +734,15 @@
             <li>nechám si to pro sebe</li>
             <li>zkusím to využít</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">okamžitě to někomu řeknu</button>
+            <button onclick="selectAnswer(this,1)">půjdu tam sám</button>
+            <button onclick="selectAnswer(this,2)">nechám si to pro sebe</button>
+            <button onclick="selectAnswer(this,3)">zkusím to využít</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1a2b2e"/>
-                <stop offset="100%" stop-color="#23311d"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg4)"/>
-            <ellipse cx="130" cy="116" rx="44" ry="18" fill="#23382f"/>
-            <ellipse cx="130" cy="88" rx="32" ry="52" fill="#15271f" stroke="#8ea796" stroke-width="3"/>
-            <path d="M130 50 L114 88 L146 88 Z" fill="#d7b56d"/>
-            <circle cx="130" cy="98" r="4" fill="#f2e3b5"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a2b2e"/><stop offset="100%" stop-color="#23311d"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg4)"/><ellipse cx="130" cy="116" rx="44" ry="18" fill="#23382f"/><ellipse cx="130" cy="88" rx="32" ry="52" fill="#15271f" stroke="#8ea796" stroke-width="3"/><path d="M130 50 L114 88 L146 88 Z" fill="#d7b56d"/><circle cx="130" cy="98" r="4" fill="#f2e3b5"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -591,21 +765,15 @@
             <li>uteču</li>
             <li>nechám to být</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">pomůžu bez váhání</button>
+            <button onclick="selectAnswer(this,1)">zavolám pomoc</button>
+            <button onclick="selectAnswer(this,2)">uteču</button>
+            <button onclick="selectAnswer(this,3)">nechám to být</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#13231d"/>
-                <stop offset="100%" stop-color="#2e2c1c"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg5)"/>
-            <circle cx="80" cy="54" r="18" fill="#eadfc5"/>
-            <circle cx="180" cy="54" r="18" fill="#eadfc5"/>
-            <path d="M80 78 q0 34 -26 46" stroke="#8b1f1f" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M180 78 q0 34 26 46" stroke="#7dd48a" stroke-width="8" fill="none" stroke-linecap="round"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#13231d"/><stop offset="100%" stop-color="#2e2c1c"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg5)"/><circle cx="80" cy="54" r="18" fill="#eadfc5"/><circle cx="180" cy="54" r="18" fill="#eadfc5"/><path d="M80 78 q0 34 -26 46" stroke="#8b1f1f" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M180 78 q0 34 26 46" stroke="#7dd48a" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -628,21 +796,15 @@
             <li>vyzkouším to</li>
             <li>využiju to systematicky</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">nikdy to nepoužiju</button>
+            <button onclick="selectAnswer(this,1)">použiju to jen v krajní situaci</button>
+            <button onclick="selectAnswer(this,2)">vyzkouším to</button>
+            <button onclick="selectAnswer(this,3)">využiju to systematicky</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg6" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#2e2419"/>
-                <stop offset="100%" stop-color="#142330"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg6)"/>
-            <rect x="86" y="84" width="96" height="8" rx="4" fill="#6c4729" transform="rotate(-18 86 84)"/>
-            <path d="M168 54 l24 14 l-10 10 z" fill="#d8b56d"/>
-            <path d="M128 72 q16 -26 38 -26" stroke="#f4e8bf" stroke-width="3" fill="none"/>
-            <circle cx="120" cy="70" r="18" fill="#d8b56d" opacity=".15"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg6" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2e2419"/><stop offset="100%" stop-color="#142330"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg6)"/><rect x="86" y="84" width="96" height="8" rx="4" fill="#6c4729" transform="rotate(-18 86 84)"/><path d="M168 54 l24 14 l-10 10 z" fill="#d8b56d"/><path d="M128 72 q16 -26 38 -26" stroke="#f4e8bf" stroke-width="3" fill="none"/><circle cx="120" cy="70" r="18" fill="#d8b56d" opacity=".15"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -665,19 +827,15 @@
             <li>neriskuju</li>
             <li>rozhodnu se podle situace</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">obětuju se</button>
+            <button onclick="selectAnswer(this,1)">hledám jiné řešení</button>
+            <button onclick="selectAnswer(this,2)">neriskuju</button>
+            <button onclick="selectAnswer(this,3)">rozhodnu se podle situace</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg7" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#19322d"/>
-                <stop offset="100%" stop-color="#1b2434"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg7)"/>
-            <path d="M130 34 l42 14 v28 c0 28-19 47-42 58c-23-11-42-30-42-58V48z" fill="#d8b86b" opacity=".9"/>
-            <path d="M130 48 l28 9 v19 c0 19-11 32-28 41c-17-9-28-22-28-41V57z" fill="#2e4851"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg7" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#19322d"/><stop offset="100%" stop-color="#1b2434"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg7)"/><path d="M130 34 l42 14 v28 c0 28-19 47-42 58c-23-11-42-30-42-58V48z" fill="#d8b86b" opacity=".9"/><path d="M130 48 l28 9 v19 c0 19-11 32-28 41c-17-9-28-22-28-41V57z" fill="#2e4851"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -700,22 +858,15 @@
             <li>stáhnu se a budu mlčet</li>
             <li>využiju situaci proti ostatním</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">budu se hned bránit</button>
+            <button onclick="selectAnswer(this,1)">zkusím zjistit, kdo to udělal</button>
+            <button onclick="selectAnswer(this,2)">stáhnu se a budu mlčet</button>
+            <button onclick="selectAnswer(this,3)">využiju situaci proti ostatním</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg8" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1f2836"/>
-                <stop offset="100%" stop-color="#2f241c"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg8)"/>
-            <path d="M130 36 V120" stroke="#d8b86b" stroke-width="6"/>
-            <path d="M86 56 H174" stroke="#d8b86b" stroke-width="5"/>
-            <path d="M86 56 l-18 30 h36z" fill="#c8d4d8"/>
-            <path d="M174 56 l-18 30 h36z" fill="#c8d4d8"/>
-            <rect x="112" y="120" width="36" height="8" rx="4" fill="#d8b86b"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg8" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1f2836"/><stop offset="100%" stop-color="#2f241c"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg8)"/><path d="M130 36 V120" stroke="#d8b86b" stroke-width="6"/><path d="M86 56 H174" stroke="#d8b86b" stroke-width="5"/><path d="M86 56 l-18 30 h36z" fill="#c8d4d8"/><path d="M174 56 l-18 30 h36z" fill="#c8d4d8"/><rect x="112" y="120" width="36" height="8" rx="4" fill="#d8b86b"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -738,20 +889,15 @@
             <li>použiju to, když se mi to bude hodit</li>
             <li>oznámím to autoritě</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">nechám si to pro sebe</button>
+            <button onclick="selectAnswer(this,1)">řeknu to jen tomu člověku</button>
+            <button onclick="selectAnswer(this,2)">použiju to, když se mi to bude hodit</button>
+            <button onclick="selectAnswer(this,3)">oznámím to autoritě</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg9" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1a2a30"/>
-                <stop offset="100%" stop-color="#2d2228"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg9)"/>
-            <circle cx="130" cy="80" r="34" fill="#eadfc5"/>
-            <circle cx="130" cy="80" r="10" fill="#14212a"/>
-            <path d="M104 114 q26 -14 52 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg9" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a2a30"/><stop offset="100%" stop-color="#2d2228"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg9)"/><circle cx="130" cy="80" r="34" fill="#eadfc5"/><circle cx="130" cy="80" r="10" fill="#14212a"/><path d="M104 114 q26 -14 52 0" stroke="#d8b86b" stroke-width="5" fill="none"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -774,21 +920,15 @@
             <li>nechám ho, ať si poradí sám</li>
             <li>využiju toho, že udělal chybu</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">půjdu mu pomoct</button>
+            <button onclick="selectAnswer(this,1)">pokusím se ho zastavit</button>
+            <button onclick="selectAnswer(this,2)">nechám ho, ať si poradí sám</button>
+            <button onclick="selectAnswer(this,3)">využiju toho, že udělal chybu</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg10" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#16272c"/>
-                <stop offset="100%" stop-color="#233126"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg10)"/>
-            <circle cx="95" cy="58" r="18" fill="#eadfc5"/>
-            <circle cx="165" cy="58" r="18" fill="#eadfc5"/>
-            <path d="M78 112 q17 -26 34 0" stroke="#7dd48a" stroke-width="8" fill="none" stroke-linecap="round"/>
-            <path d="M148 112 q17 -26 34 0" stroke="#d8b86b" stroke-width="8" fill="none" stroke-linecap="round"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg10" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#16272c"/><stop offset="100%" stop-color="#233126"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg10)"/><circle cx="95" cy="58" r="18" fill="#eadfc5"/><circle cx="165" cy="58" r="18" fill="#eadfc5"/><path d="M78 112 q17 -26 34 0" stroke="#7dd48a" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M148 112 q17 -26 34 0" stroke="#d8b86b" stroke-width="8" fill="none" stroke-linecap="round"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -811,20 +951,15 @@
             <li>budu dělat, že o tom nevím</li>
             <li>zkusím sledování obrátit ve svůj prospěch</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">postavím se tomu člověku</button>
+            <button onclick="selectAnswer(this,1)">požádám o pomoc</button>
+            <button onclick="selectAnswer(this,2)">budu dělat, že o tom nevím</button>
+            <button onclick="selectAnswer(this,3)">zkusím sledování obrátit ve svůj prospěch</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg11" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1a2b2b"/>
-                <stop offset="100%" stop-color="#1e2234"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg11)"/>
-            <path d="M54 80 q38 -42 76 -42 q38 0 76 42 q-38 42 -76 42 q-38 0 -76 -42z" fill="#dfe7e2"/>
-            <circle cx="130" cy="80" r="24" fill="#7dd48a"/>
-            <circle cx="130" cy="80" r="10" fill="#0c1714"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg11" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a2b2b"/><stop offset="100%" stop-color="#1e2234"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg11)"/><path d="M54 80 q38 -42 76 -42 q38 0 76 42 q-38 42 -76 42 q-38 0 -76 -42z" fill="#dfe7e2"/><circle cx="130" cy="80" r="24" fill="#7dd48a"/><circle cx="130" cy="80" r="10" fill="#0c1714"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -847,21 +982,15 @@
             <li>nechám si ji pro sebe</li>
             <li>počkám, jestli mi ta informace nebude užitečná později</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">hned ji řeknu všem</button>
+            <button onclick="selectAnswer(this,1)">řeknu ji jen jednomu člověku</button>
+            <button onclick="selectAnswer(this,2)">nechám si ji pro sebe</button>
+            <button onclick="selectAnswer(this,3)">počkám, jestli mi ta informace nebude užitečná později</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg12" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#202a36"/>
-                <stop offset="100%" stop-color="#203325"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg12)"/>
-            <path d="M72 90 l56 -28 v56 l-56 -28z" fill="#d8b86b"/>
-            <rect x="60" y="80" width="18" height="20" rx="4" fill="#eadfc5"/>
-            <path d="M138 70 q24 10 34 28" stroke="#eadfc5" stroke-width="4" fill="none"/>
-            <path d="M142 56 q38 18 52 48" stroke="#eadfc5" stroke-width="3" fill="none" opacity=".75"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg12" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#202a36"/><stop offset="100%" stop-color="#203325"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg12)"/><path d="M72 90 l56 -28 v56 l-56 -28z" fill="#d8b86b"/><rect x="60" y="80" width="18" height="20" rx="4" fill="#eadfc5"/><path d="M138 70 q24 10 34 28" stroke="#eadfc5" stroke-width="4" fill="none"/><path d="M142 56 q38 18 52 48" stroke="#eadfc5" stroke-width="3" fill="none" opacity=".75"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -884,21 +1013,15 @@
             <li>budu chtít vědět víc</li>
             <li>využiju situaci, pokud mi to pomůže</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">zastanu se toho člověka</button>
+            <button onclick="selectAnswer(this,1)">nebudu se do toho plést</button>
+            <button onclick="selectAnswer(this,2)">budu chtít vědět víc</button>
+            <button onclick="selectAnswer(this,3)">využiju situaci, pokud mi to pomůže</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg13" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1d2230"/>
-                <stop offset="100%" stop-color="#2f2420"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg13)"/>
-            <circle cx="92" cy="68" r="18" fill="#eadfc5"/>
-            <circle cx="154" cy="68" r="18" fill="#eadfc5"/>
-            <path d="M78 100 q18 -12 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
-            <path d="M140 100 q18 -12 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg13" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1d2230"/><stop offset="100%" stop-color="#2f2420"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg13)"/><circle cx="92" cy="68" r="18" fill="#eadfc5"/><circle cx="154" cy="68" r="18" fill="#eadfc5"/><path d="M78 100 q18 -12 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/><path d="M140 100 q18 -12 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -921,20 +1044,15 @@
             <li>nechám si ji u sebe a budu přemýšlet</li>
             <li>podívám se, co je uvnitř</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">hned ji vrátím</button>
+            <button onclick="selectAnswer(this,1)">pokusím se zjistit, komu patří</button>
+            <button onclick="selectAnswer(this,2)">nechám si ji u sebe a budu přemýšlet</button>
+            <button onclick="selectAnswer(this,3)">podívám se, co je uvnitř</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg14" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#2d241d"/>
-                <stop offset="100%" stop-color="#20333b"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg14)"/>
-            <rect x="74" y="56" width="112" height="66" rx="12" fill="#6b4a2a"/>
-            <rect x="86" y="70" width="72" height="38" rx="8" fill="#e7dcc2"/>
-            <circle cx="172" cy="90" r="12" fill="#d8b86b"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg14" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2d241d"/><stop offset="100%" stop-color="#20333b"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg14)"/><rect x="74" y="56" width="112" height="66" rx="12" fill="#6b4a2a"/><rect x="86" y="70" width="72" height="38" rx="8" fill="#e7dcc2"/><circle cx="172" cy="90" r="12" fill="#d8b86b"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -957,20 +1075,15 @@
             <li>zkusil(a) bych to</li>
             <li>využil(a) bych toho bez výčitek</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">nikdy bych to neudělal(a)</button>
+            <button onclick="selectAnswer(this,1)">udělal(a) bych to jen v krajní situaci</button>
+            <button onclick="selectAnswer(this,2)">zkusil(a) bych to</button>
+            <button onclick="selectAnswer(this,3)">využil(a) bych toho bez výčitek</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg15" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1f2c3b"/>
-                <stop offset="100%" stop-color="#2a3020"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg15)"/>
-            <rect x="64" y="40" width="132" height="88" rx="10" fill="#efe5cb"/>
-            <path d="M88 68 H172 M88 84 H166 M88 100 H150" stroke="#7b6b4a" stroke-width="3"/>
-            <path d="M176 46 l20 20" stroke="#d8b86b" stroke-width="6"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg15" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1f2c3b"/><stop offset="100%" stop-color="#2a3020"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg15)"/><rect x="64" y="40" width="132" height="88" rx="10" fill="#efe5cb"/><path d="M88 68 H172 M88 84 H166 M88 100 H150" stroke="#7b6b4a" stroke-width="3"/><path d="M176 46 l20 20" stroke="#d8b86b" stroke-width="6"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -993,21 +1106,15 @@
             <li>nebudu riskovat, že se to obrátí proti mně</li>
             <li>využiju situaci, abych si sám/sama polepšil(a)</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">půjdu za tím člověkem</button>
+            <button onclick="selectAnswer(this,1)">budu to jen pozorovat</button>
+            <button onclick="selectAnswer(this,2)">nebudu riskovat, že se to obrátí proti mně</button>
+            <button onclick="selectAnswer(this,3)">využiju situaci, abych si sám/sama polepšil(a)</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg16" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1d2536"/>
-                <stop offset="100%" stop-color="#223120"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg16)"/>
-            <circle cx="80" cy="72" r="16" fill="#eadfc5"/>
-            <circle cx="130" cy="72" r="16" fill="#eadfc5"/>
-            <circle cx="180" cy="72" r="16" fill="#eadfc5" opacity=".45"/>
-            <path d="M64 106 q16 -12 32 0 M114 106 q16 -12 32 0 M164 106 q16 -12 32 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg16" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1d2536"/><stop offset="100%" stop-color="#223120"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg16)"/><circle cx="80" cy="72" r="16" fill="#eadfc5"/><circle cx="130" cy="72" r="16" fill="#eadfc5"/><circle cx="180" cy="72" r="16" fill="#eadfc5" opacity=".45"/><path d="M64 106 q16 -12 32 0 M114 106 q16 -12 32 0 M164 106 q16 -12 32 0" stroke="#d8b86b" stroke-width="5" fill="none"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -1030,20 +1137,15 @@
             <li>budu váhat</li>
             <li>využiju to jako výhodu</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">odmítnu</button>
+            <button onclick="selectAnswer(this,1)">udělám to, pokud tím někoho ochráním</button>
+            <button onclick="selectAnswer(this,2)">budu váhat</button>
+            <button onclick="selectAnswer(this,3)">využiju to jako výhodu</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg17" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1f2836"/>
-                <stop offset="100%" stop-color="#2d231f"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg17)"/>
-            <rect x="92" y="72" width="76" height="54" rx="10" fill="#d8b86b"/>
-            <path d="M108 72 v-8 q0 -22 22 -22 q22 0 22 22 v8" stroke="#eadfc5" stroke-width="8" fill="none"/>
-            <circle cx="130" cy="96" r="8" fill="#7b6b4a"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg17" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1f2836"/><stop offset="100%" stop-color="#2d231f"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg17)"/><rect x="92" y="72" width="76" height="54" rx="10" fill="#d8b86b"/><path d="M108 72 v-8 q0 -22 22 -22 h0 q22 0 22 22 v8" stroke="#eadfc5" stroke-width="8" fill="none"/><circle cx="130" cy="96" r="8" fill="#7b6b4a"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -1066,21 +1168,15 @@
             <li>přizpůsobím se</li>
             <li>využiju situaci pro svůj prospěch</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">odejdu</button>
+            <button onclick="selectAnswer(this,1)">zkusím ostatní ovlivnit k lepšímu</button>
+            <button onclick="selectAnswer(this,2)">přizpůsobím se</button>
+            <button onclick="selectAnswer(this,3)">využiju situaci pro svůj prospěch</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg18" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1d2433"/>
-                <stop offset="100%" stop-color="#203026"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg18)"/>
-            <circle cx="88" cy="58" r="15" fill="#eadfc5"/>
-            <circle cx="130" cy="50" r="16" fill="#eadfc5"/>
-            <circle cx="172" cy="58" r="15" fill="#eadfc5"/>
-            <path d="M70 100 q18 -14 36 0 M112 98 q18 -16 36 0 M154 100 q18 -14 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg18" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1d2433"/><stop offset="100%" stop-color="#203026"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg18)"/><circle cx="88" cy="58" r="15" fill="#eadfc5"/><circle cx="130" cy="50" r="16" fill="#eadfc5"/><circle cx="172" cy="58" r="15" fill="#eadfc5"/><path d="M70 100 q18 -14 36 0 M112 98 q18 -16 36 0 M154 100 q18 -14 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -1103,19 +1199,15 @@
             <li>budu o tom dlouho přemýšlet</li>
             <li>využiju každou příležitost</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">odmítnu to</button>
+            <button onclick="selectAnswer(this,1)">vezmu to, když nikomu neublížím</button>
+            <button onclick="selectAnswer(this,2)">budu o tom dlouho přemýšlet</button>
+            <button onclick="selectAnswer(this,3)">využiju každou příležitost</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg19" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#2b231d"/>
-                <stop offset="100%" stop-color="#21313a"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg19)"/>
-            <circle cx="130" cy="78" r="38" fill="#d8b86b"/>
-            <path d="M130 46 l8 20 l22 2 l-16 14 l5 21 l-19 -11 l-19 11 l5 -21 l-16 -14 l22 -2z" fill="#fff0c2"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg19" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2b231d"/><stop offset="100%" stop-color="#21313a"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg19)"/><circle cx="130" cy="78" r="38" fill="#d8b86b"/><path d="M130 46 l8 20 l22 2 l-16 14 l5 21 l-19 -11 l-19 11 l5 -21 l-16 -14 l22 -2z" fill="#fff0c2"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -1138,20 +1230,15 @@
             <li>budu doufat, že zasáhne někdo jiný</li>
             <li>nebudu se míchat do cizích věcí</li>
           </ul>
+          <div class="prophecy-options">
+            <button onclick="selectAnswer(this,0)">ozvu se jako první</button>
+            <button onclick="selectAnswer(this,1)">půjdu pro pomoc</button>
+            <button onclick="selectAnswer(this,2)">budu doufat, že zasáhne někdo jiný</button>
+            <button onclick="selectAnswer(this,3)">nebudu se míchat do cizích věcí</button>
+          </div>
         </div>
         <div class="art">
-          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="bg20" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1e2d27"/>
-                <stop offset="100%" stop-color="#20243a"/>
-              </linearGradient>
-            </defs>
-            <rect width="260" height="160" rx="16" fill="url(#bg20)"/>
-            <path d="M86 94 q14 -18 28 0 q14 18 28 0 q14 -18 28 0" stroke="#eadfc5" stroke-width="10" fill="none" stroke-linecap="round"/>
-            <circle cx="100" cy="66" r="14" fill="#d8b86b"/>
-            <circle cx="160" cy="66" r="14" fill="#7dd48a"/>
-          </svg>
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg20" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e2d27"/><stop offset="100%" stop-color="#20243a"/></linearGradient></defs><rect width="260" height="160" rx="16" fill="url(#bg20)"/><path d="M86 94 q14 -18 28 0 q14 18 28 0 q14 -18 28 0" stroke="#eadfc5" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="100" cy="66" r="14" fill="#d8b86b"/><circle cx="160" cy="66" r="14" fill="#7dd48a"/></svg>
         </div>
       </div>
       <div class="note-wrap">
@@ -1161,6 +1248,10 @@
     </article>
 
   </section>
+
+  <div id="prophecyAction" style="display:none; text-align:center; margin:34px 0 10px;">
+    <button onclick="showResult()">🔮 Vyjevit proroctví</button>
+  </div>
 
   <section class="help-box">
     <h3>🎭 Jak s tím pracovat ve hře</h3>
@@ -1204,13 +1295,63 @@
   </section>
 </div>
 
+<div id="resultOverlay" class="result-overlay">
+  <div class="result-box">
+    <h2>✨ Proroctví bylo vyjeveno ✨</h2>
+
+    <div class="wheel-wrap">
+      <div id="magicWheel" class="magic-wheel">
+        <div class="magic-wheel-center">
+          <div class="main-role" id="mainRoleText">Tvoje role</div>
+          <div class="small">rozhodly tvé volby</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="role-legend">
+      <span>🟢 Dědic Zmijozelu</span>
+      <span>🟡 Oběť baziliška</span>
+      <span>🔴 Hrdina</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label"><span>Odvaha</span><span id="couragePct">0 %</span></div>
+        <div class="bar"><div id="courageBar" class="bar-fill" style="background:#ff6b6b;color:#ff6b6b;"></div></div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label"><span>Ochrana druhých</span><span id="protectPct">0 %</span></div>
+        <div class="bar"><div id="protectBar" class="bar-fill" style="background:#7dd48a;color:#7dd48a;"></div></div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label"><span>Tajnůstkářství</span><span id="secrecyPct">0 %</span></div>
+        <div class="bar"><div id="secrecyBar" class="bar-fill" style="background:#66d9ff;color:#66d9ff;"></div></div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label"><span>Strach</span><span id="fearPct">0 %</span></div>
+        <div class="bar"><div id="fearBar" class="bar-fill" style="background:#ffd166;color:#ffd166;"></div></div>
+      </div>
+    </div>
+
+    <div id="resultComment" class="result-comment"></div>
+
+    <div class="result-actions">
+      <button class="close-result" onclick="closeResult()">Zavřít</button>
+      <button class="restart-prophecy" onclick="resetProphecy()">Zkusit znovu</button>
+    </div>
+  </div>
+</div>
+
 <script>
   function clearText(button){
     const box = button.closest(".note-wrap").querySelector("textarea");
     box.value = "";
   }
 
-  // Třpytky
+  // třpytky
   const sparkleWrap = document.getElementById("sparkles");
   for(let i=0;i<55;i++){
     const s = document.createElement("div");
@@ -1222,9 +1363,9 @@
     sparkleWrap.appendChild(s);
   }
 
-  // Citát systémovým hlasem prohlížeče
+  // systémový hlas prohlížeče
   const quote = "O tom jací doopravdy jsme, nesvědčí naše schopnosti, ale naše volby.";
-  const btn = document.getElementById("dumbledoreBtn");
+  const dumbledoreBtn = document.getElementById("dumbledoreBtn");
 
   function speakQuote(){
     if(!("speechSynthesis" in window)) return;
@@ -1241,9 +1382,9 @@
     speechSynthesis.speak(u);
   }
 
-  btn.addEventListener("click", speakQuote);
+  dumbledoreBtn.addEventListener("click", speakQuote);
 
-  // Zvuk pera na pergamenu při psaní
+  // zvuk pera na pergamenu při psaní
   let audioCtx = null;
 
   function ensureAudio(){
@@ -1285,11 +1426,352 @@
   }
 
   document.querySelectorAll("textarea").forEach(area => {
-    area.addEventListener("keydown", () => {
-      playScratch();
-    });
+    area.addEventListener("keydown", () => playScratch());
     area.addEventListener("focus", ensureAudio);
   });
+
+  // režimy
+  let mode = "roles";
+  const scores = { heir:0, victim:0, hero:0 };
+  const traits = { courage:0, protect:0, secrecy:0, fear:0 };
+  const answered = {};
+
+  const prophecyData = [
+    [
+      { role:{heir:2,victim:0,hero:1}, traits:{courage:1,protect:0,secrecy:1,fear:0} },
+      { role:{heir:0,victim:1,hero:2}, traits:{courage:1,protect:1,secrecy:0,fear:1} },
+      { role:{heir:2,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:3,fear:1} },
+      { role:{heir:1,victim:0,hero:2}, traits:{courage:2,protect:1,secrecy:0,fear:0} }
+    ],
+    [
+      { role:{heir:1,victim:0,hero:2}, traits:{courage:2,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:2} },
+      { role:{heir:0,victim:2,hero:1}, traits:{courage:0,protect:1,secrecy:0,fear:1} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:1,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:1,protect:3,secrecy:0,fear:0} },
+      { role:{heir:0,victim:3,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:2} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} },
+      { role:{heir:1,victim:0,hero:2}, traits:{courage:1,protect:1,secrecy:0,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:2}, traits:{courage:1,protect:2,secrecy:0,fear:0} },
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:3,protect:1,secrecy:0,fear:0} },
+      { role:{heir:2,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:3,fear:1} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:2,protect:3,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:2}, traits:{courage:1,protect:2,secrecy:0,fear:0} },
+      { role:{heir:0,victim:3,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:3} },
+      { role:{heir:1,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:1} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:1,protect:1,secrecy:0,fear:0} },
+      { role:{heir:1,victim:0,hero:1}, traits:{courage:1,protect:0,secrecy:0,fear:0} },
+      { role:{heir:2,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:0} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:3,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:4}, traits:{courage:3,protect:3,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:2}, traits:{courage:1,protect:1,secrecy:0,fear:0} },
+      { role:{heir:0,victim:3,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:2} },
+      { role:{heir:1,victim:1,hero:1}, traits:{courage:1,protect:0,secrecy:0,fear:1} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:1}, traits:{courage:1,protect:0,secrecy:0,fear:0} },
+      { role:{heir:1,victim:0,hero:2}, traits:{courage:1,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:3,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:2} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:1,victim:0,hero:1}, traits:{courage:0,protect:0,secrecy:2,fear:0} },
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:1,protect:2,secrecy:0,fear:0} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:3,fear:0} },
+      { role:{heir:0,victim:1,hero:2}, traits:{courage:0,protect:1,secrecy:0,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:1,protect:3,secrecy:0,fear:0} },
+      { role:{heir:0,victim:0,hero:2}, traits:{courage:1,protect:1,secrecy:0,fear:0} },
+      { role:{heir:1,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:2}, traits:{courage:2,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:1,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:2} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:1,protect:0,secrecy:1,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:1,protect:2,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:2,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:3,fear:0} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:1,protect:2,secrecy:0,fear:0} },
+      { role:{heir:0,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:1,victim:0,hero:1}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:0,protect:1,secrecy:0,fear:0} },
+      { role:{heir:0,victim:0,hero:2}, traits:{courage:1,protect:1,secrecy:0,fear:0} },
+      { role:{heir:1,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:0} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:1}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:2,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:0} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:0,protect:3,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:3,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:2} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:1}, traits:{courage:0,protect:1,secrecy:0,fear:0} },
+      { role:{heir:0,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:2,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:2}, traits:{courage:1,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:2,protect:1,secrecy:0,fear:0} },
+      { role:{heir:0,victim:2,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:1} },
+      { role:{heir:3,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:3}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:1,victim:0,hero:1}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:0,victim:1,hero:1}, traits:{courage:0,protect:0,secrecy:0,fear:0} },
+      { role:{heir:4,victim:0,hero:0}, traits:{courage:0,protect:0,secrecy:1,fear:0} }
+    ],
+    [
+      { role:{heir:0,victim:0,hero:4}, traits:{courage:2,protect:3,secrecy:0,fear:0} },
+      { role:{heir:0,victim:0,hero:2}, traits:{courage:0,protect:2,secrecy:0,fear:0} },
+      { role:{heir:0,victim:3,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:2} },
+      { role:{heir:1,victim:1,hero:0}, traits:{courage:0,protect:0,secrecy:0,fear:0} }
+    ]
+  ];
+
+  const maxRole = { heir:80, victim:60, hero:80 };
+  const maxTraits = { courage:40, protect:45, secrecy:45, fear:35 };
+
+  document.getElementById("modeRoles").onclick = () => {
+    mode = "roles";
+    setActive("modeRoles");
+    hideOptions();
+  };
+
+  document.getElementById("modeProphecy").onclick = () => {
+    mode = "prophecy";
+    setActive("modeProphecy");
+    showOptions();
+  };
+
+  function setActive(id){
+    document.querySelectorAll(".mode-switch button").forEach(b=>b.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+
+  function showOptions(){
+    document.querySelectorAll(".prophecy-options").forEach(el=>el.style.display="block");
+    document.getElementById("prophecyAction").style.display = "block";
+  }
+
+  function hideOptions(){
+    document.querySelectorAll(".prophecy-options").forEach(el=>el.style.display="none");
+    document.getElementById("prophecyAction").style.display = "none";
+  }
+
+  function resetScores(){
+    scores.heir = 0; scores.victim = 0; scores.hero = 0;
+    traits.courage = 0; traits.protect = 0; traits.secrecy = 0; traits.fear = 0;
+    Object.keys(answered).forEach(k => delete answered[k]);
+  }
+
+  function subtractOption(option){
+    for(const k in option.role){ scores[k] -= option.role[k]; }
+    for(const k in option.traits){ traits[k] -= option.traits[k]; }
+  }
+
+  function addOption(option){
+    for(const k in option.role){ scores[k] += option.role[k]; }
+    for(const k in option.traits){ traits[k] += option.traits[k]; }
+  }
+
+  function selectAnswer(btn, optionIndex){
+    if(mode !== "prophecy") return;
+
+    const card = btn.closest(".card");
+    const cardIndex = [...document.querySelectorAll(".card")].indexOf(card);
+
+    if(answered[cardIndex] !== undefined){
+      subtractOption(prophecyData[cardIndex][answered[cardIndex]]);
+    }
+
+    answered[cardIndex] = optionIndex;
+    addOption(prophecyData[cardIndex][optionIndex]);
+
+    btn.closest(".prophecy-options").querySelectorAll("button").forEach(b=>b.classList.remove("selected"));
+    btn.classList.add("selected");
+  }
+
+  function percent(value, max){
+    return Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+  }
+
+  function roleLabel(key){
+    return {
+      heir: "Dědic Zmijozelu",
+      victim: "Oběť baziliška",
+      hero: "Hrdina"
+    }[key];
+  }
+
+  function buildComment(main, second, t){
+    let mix = "";
+
+    if(main === "hero" && second === "victim"){
+      mix = "Tvé volby ukazují na hrdinu, ale se silnou opatrností oběti baziliška.";
+    } else if(main === "hero" && second === "heir"){
+      mix = "Často jednáš jako hrdina, ale občas volíš strategicky a chladně.";
+    } else if(main === "heir" && second === "hero"){
+      mix = "Máš znaky dědice Zmijozelu, ale v některých chvílích volíš jako hrdina.";
+    } else if(main === "heir" && second === "victim"){
+      mix = "Působíš uzavřeně a strategicky, ale v některých volbách je cítit i opatrnost a strach.";
+    } else if(main === "victim" && second === "hero"){
+      mix = "Působíš opatrně, ale v klíčových chvílích se umíš postavit.";
+    } else if(main === "victim" && second === "heir"){
+      mix = "Často se chráníš a ustupuješ, ale někdy si necháváš výhodu pro sebe.";
+    }
+
+    let traitText = "";
+
+    if(t.courage >= 70 && t.protect >= 70){
+      traitText = " Ve většině situací volíš ochranu druhých a spravedlnost.";
+    } else if(t.secrecy >= 65){
+      traitText = " Často si necháváš informace pro sebe a jednáš strategicky.";
+    } else if(t.fear >= 60){
+      traitText = " Ve tvých rozhodnutích je znát opatrnost a citlivost k nebezpečí.";
+    } else if(t.courage >= 65){
+      traitText = " V důležitých chvílích se nebojíš jednat.";
+    } else {
+      traitText = " Tvé volby ukazují na promyšlený a ne úplně jednoznačný charakter.";
+    }
+
+    return mix + traitText;
+  }
+
+  function playRevealSound(){
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return;
+    const ctx = new Ctx();
+    const now = ctx.currentTime;
+
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.08, now + 0.08 + i*0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.6 + i*0.05);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i*0.05);
+      osc.stop(now + 0.7 + i*0.05);
+    });
+  }
+
+  function showResult(){
+    if(mode !== "prophecy") return;
+
+    const totalAnswered = Object.keys(answered).length;
+    if(totalAnswered < prophecyData.length){
+      alert("Nejdřív vyber odpověď ve všech situacích.");
+      return;
+    }
+
+    const rolePercent = {
+      heir: percent(scores.heir, maxRole.heir),
+      victim: percent(scores.victim, maxRole.victim),
+      hero: percent(scores.hero, maxRole.hero)
+    };
+
+    const traitPercent = {
+      courage: percent(traits.courage, maxTraits.courage),
+      protect: percent(traits.protect, maxTraits.protect),
+      secrecy: percent(traits.secrecy, maxTraits.secrecy),
+      fear: percent(traits.fear, maxTraits.fear)
+    };
+
+    const sortedRoles = Object.entries(rolePercent).sort((a,b)=>b[1]-a[1]);
+    const main = sortedRoles[0][0];
+    const second = sortedRoles[1][0];
+
+    document.getElementById("mainRoleText").textContent = roleLabel(main);
+
+    const wheel = document.getElementById("magicWheel");
+    const h = rolePercent.heir;
+    const v = rolePercent.victim;
+    const hr = rolePercent.hero;
+    const total = h + v + hr || 1;
+
+    const hDeg = (h / total) * 360;
+    const vDeg = (v / total) * 360;
+    const hrDeg = 360 - hDeg - vDeg;
+
+    wheel.style.background = `conic-gradient(
+      #44ff88 0deg ${hDeg}deg,
+      #ffd84d ${hDeg}deg ${hDeg + vDeg}deg,
+      #ff5c5c ${hDeg + vDeg}deg 360deg
+    )`;
+
+    document.getElementById("couragePct").textContent = traitPercent.courage + " %";
+    document.getElementById("protectPct").textContent = traitPercent.protect + " %";
+    document.getElementById("secrecyPct").textContent = traitPercent.secrecy + " %";
+    document.getElementById("fearPct").textContent = traitPercent.fear + " %";
+
+    document.getElementById("courageBar").style.width = "0%";
+    document.getElementById("protectBar").style.width = "0%";
+    document.getElementById("secrecyBar").style.width = "0%";
+    document.getElementById("fearBar").style.width = "0%";
+
+    setTimeout(() => {
+      document.getElementById("courageBar").style.width = traitPercent.courage + "%";
+      document.getElementById("protectBar").style.width = traitPercent.protect + "%";
+      document.getElementById("secrecyBar").style.width = traitPercent.secrecy + "%";
+      document.getElementById("fearBar").style.width = traitPercent.fear + "%";
+    }, 80);
+
+    document.getElementById("resultComment").textContent = buildComment(main, second, traitPercent);
+
+    document.getElementById("resultOverlay").classList.add("show");
+    playRevealSound();
+  }
+
+  function closeResult(){
+    document.getElementById("resultOverlay").classList.remove("show");
+  }
+
+  function resetProphecy(){
+    resetScores();
+    document.querySelectorAll(".prophecy-options button").forEach(b=>b.classList.remove("selected"));
+    document.querySelectorAll("textarea").forEach(t=>t.value = "");
+    document.getElementById("courageBar").style.width = "0%";
+    document.getElementById("protectBar").style.width = "0%";
+    document.getElementById("secrecyBar").style.width = "0%";
+    document.getElementById("fearBar").style.width = "0%";
+    closeResult();
+  }
 </script>
 </body>
 </html>
