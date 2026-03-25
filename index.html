@@ -172,6 +172,117 @@
     transform:scale(1.05);
   }
 
+  .mode-switch-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+.mode-label{
+  color:var(--gold-2);
+  font-weight:700;
+  opacity:.65;
+  transition:all .35s ease;
+}
+
+.mode-label.active{
+  opacity:1;
+  text-shadow:0 0 14px rgba(255,215,120,.45);
+  transform:scale(1.03);
+}
+
+.mode-toggle{
+  position:relative;
+  width:86px;
+  height:42px;
+  display:inline-block;
+}
+
+.mode-toggle input{
+  display:none;
+}
+
+.mode-slider{
+  position:absolute;
+  inset:0;
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(14,22,34,.95), rgba(9,15,24,.98));
+  border:1px solid rgba(216,184,107,.32);
+  box-shadow:0 0 18px rgba(216,184,107,.10), inset 0 0 12px rgba(255,255,255,.03);
+  cursor:pointer;
+  transition:all .35s ease;
+}
+
+.mode-slider::before{
+  content:"";
+  position:absolute;
+  width:30px;
+  height:30px;
+  left:6px;
+  top:5px;
+  border-radius:50%;
+  background:linear-gradient(180deg, #ead8a7, #cdaa57);
+  box-shadow:0 0 12px rgba(255,215,120,.35);
+  transition:all .35s ease;
+}
+
+.mode-toggle input:checked + .mode-slider{
+  background:linear-gradient(180deg, rgba(18,34,28,.96), rgba(8,22,16,.98));
+  border-color:rgba(125,212,138,.42);
+  box-shadow:0 0 22px rgba(125,212,138,.22), inset 0 0 12px rgba(255,255,255,.03);
+}
+
+.mode-toggle input:checked + .mode-slider::before{
+  transform:translateX(43px);
+  background:linear-gradient(180deg, #d7f0dc, #8dc99e);
+  box-shadow:0 0 16px rgba(125,212,138,.45);
+}
+
+.prophecy-options{
+  display:none;
+  margin-top:12px;
+  animation:fadeSoft .35s ease;
+}
+
+.prophecy-options button{
+  display:block;
+  width:100%;
+  margin:7px 0;
+  text-align:left;
+  padding:11px 14px;
+  background:linear-gradient(180deg, rgba(29,43,61,.96), rgba(16,27,41,.98));
+  color:#f4ecd3;
+  border:1px solid rgba(216,184,107,.18);
+}
+
+.prophecy-options button:hover{
+  box-shadow:0 0 16px rgba(216,184,107,.18);
+}
+
+.prophecy-options button.selected{
+  background:linear-gradient(180deg, rgba(215,240,220,.98), rgba(141,201,158,.96));
+  color:#10261a;
+  border:1px solid rgba(125,212,138,.65);
+  box-shadow:0 0 20px rgba(125,212,138,.35);
+}
+
+.card.prophecy-mode .options,
+.card.prophecy-mode .small-label{
+  display:none;
+}
+
+#prophecyAction{
+  animation:fadeSoft .35s ease;
+}
+
+@keyframes fadeSoft{
+  from{opacity:0; transform:translateY(6px);}
+  to{opacity:1; transform:translateY(0);}
+}
+  
   .section-title{
     margin:30px 0 14px;
     color:var(--gold-2);
@@ -617,10 +728,16 @@
       <div class="pill">📝 poznámky</div>
     </div>
 
-    <div class="mode-switch">
-      <button id="modeRoles" class="active">🎭 Hrát s rolemi</button>
-      <button id="modeProphecy">🔮 Nechat rozhodnout proroctví</button>
-    </div>
+    <div class="mode-switch-wrap">
+  <span class="mode-label left active" id="labelRoles">🎭 Hrát s rolemi</span>
+
+  <label class="mode-toggle">
+    <input type="checkbox" id="modeToggle">
+    <span class="mode-slider"></span>
+  </label>
+
+  <span class="mode-label right" id="labelProphecy">🔮 Nechat rozhodnout proroctví</span>
+</div>
   </section>
 
   <h2 class="section-title">⚡ Hypotetické situace – Tajemná komnata + reálný život</h2>
@@ -1253,10 +1370,10 @@
     <button onclick="showResult()">🔮 Vyjevit proroctví</button>
   </div>
 
-  <section class="help-box">
+  <section class="help-box" id="helpBox">
     <h3>🎭 Jak s tím pracovat ve hře</h3>
-    <p><b>Varianta A – rychlá:</b> Ty čteš situace a studenti odpovídají spontánně podle role.</p>
-    <p><b>Varianta B – hlubší:</b> Student musí vybrat řešení, zdůvodnit ho a reagovat na doplňující otázku učitele.</p>
+   <p><b>Varianta A – rychlá:</b> Ty čteš situace a hráči odpovídají spontánně podle role.</p>
+<p><b>Varianta B – hlubší:</b> Hráč musí vybrat nebo vymyslet řešení, zdůvodnit ho a reagovat na doplňující otázku spoluhráče.</p>
     <ul>
       <li>👉 „Proč bys to tajil?“</li>
       <li>👉 „Proč bys riskoval?“</li>
@@ -1568,26 +1685,38 @@
     hideOptions();
   };
 
-  document.getElementById("modeProphecy").onclick = () => {
-    mode = "prophecy";
-    setActive("modeProphecy");
-    showOptions();
-  };
+const modeToggle = document.getElementById("modeToggle");
+const labelRoles = document.getElementById("labelRoles");
+const labelProphecy = document.getElementById("labelProphecy");
+const helpBox = document.getElementById("helpBox");
 
-  function setActive(id){
-    document.querySelectorAll(".mode-switch button").forEach(b=>b.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+modeToggle.addEventListener("change", () => {
+  if(modeToggle.checked){
+    mode = "prophecy";
+    labelRoles.classList.remove("active");
+    labelProphecy.classList.add("active");
+    showOptions();
+  } else {
+    mode = "roles";
+    labelProphecy.classList.remove("active");
+    labelRoles.classList.add("active");
+    hideOptions();
   }
+});
 
   function showOptions(){
-    document.querySelectorAll(".prophecy-options").forEach(el=>el.style.display="block");
-    document.getElementById("prophecyAction").style.display = "block";
-  }
+  document.querySelectorAll(".prophecy-options").forEach(el=>el.style.display="block");
+  document.querySelectorAll(".card").forEach(card=>card.classList.add("prophecy-mode"));
+  document.getElementById("prophecyAction").style.display = "block";
+  if(helpBox) helpBox.style.display = "none";
+}
 
-  function hideOptions(){
-    document.querySelectorAll(".prophecy-options").forEach(el=>el.style.display="none");
-    document.getElementById("prophecyAction").style.display = "none";
-  }
+function hideOptions(){
+  document.querySelectorAll(".prophecy-options").forEach(el=>el.style.display="none");
+  document.querySelectorAll(".card").forEach(card=>card.classList.remove("prophecy-mode"));
+  document.getElementById("prophecyAction").style.display = "none";
+  if(helpBox) helpBox.style.display = "block";
+}
 
   function resetScores(){
     scores.heir = 0; scores.victim = 0; scores.hero = 0;
@@ -1763,15 +1892,15 @@
   }
 
   function resetProphecy(){
-    resetScores();
-    document.querySelectorAll(".prophecy-options button").forEach(b=>b.classList.remove("selected"));
-    document.querySelectorAll("textarea").forEach(t=>t.value = "");
-    document.getElementById("courageBar").style.width = "0%";
-    document.getElementById("protectBar").style.width = "0%";
-    document.getElementById("secrecyBar").style.width = "0%";
-    document.getElementById("fearBar").style.width = "0%";
-    closeResult();
-  }
+  resetScores();
+  document.querySelectorAll(".prophecy-options button").forEach(b=>b.classList.remove("selected"));
+  document.querySelectorAll("textarea").forEach(t=>t.value = "");
+  document.getElementById("courageBar").style.width = "0%";
+  document.getElementById("protectBar").style.width = "0%";
+  document.getElementById("secrecyBar").style.width = "0%";
+  document.getElementById("fearBar").style.width = "0%";
+  closeResult();
+}
 </script>
 </body>
 </html>
