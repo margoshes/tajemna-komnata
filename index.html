@@ -1,1 +1,1286 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tajemná komnata – rozhodování</title>
+<style>
+  :root {
+    --gold:#d8b86b;
+    --gold-2:#f1dfb2;
+    --ink:#0b1320;
+    --paper:#efe5cb;
+    --text:#f6f0df;
+    --muted:#d9d0b7;
+    --shadow:0 18px 44px rgba(0,0,0,.42);
+  }
 
+  * { box-sizing:border-box; }
+  html, body { margin:0; padding:0; }
+
+  body {
+    min-height:100vh;
+    font-family: Georgia, "Times New Roman", serif;
+    color:var(--text);
+    background:
+      linear-gradient(rgba(5,10,18,.30), rgba(5,10,18,.80)),
+      radial-gradient(circle at 50% 8%, rgba(255,222,150,.12), transparent 20%),
+      #07111a;
+    overflow-x:hidden;
+  }
+
+  .header-image {
+    position:relative;
+    height:560px;
+    background:
+      linear-gradient(rgba(4,8,15,.08), rgba(4,8,15,.38)),
+      url("https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=1600&q=80") center top / cover no-repeat;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
+
+  .header-overlay {
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(circle at 70% 18%, rgba(255,220,120,.10), transparent 18%),
+      linear-gradient(to bottom, rgba(0,0,0,.03), rgba(0,0,0,.28));
+    pointer-events:none;
+  }
+
+  .mist {
+    position:fixed;
+    left:-10%;
+    right:-10%;
+    bottom:0;
+    height:220px;
+    pointer-events:none;
+    background:radial-gradient(ellipse at center, rgba(255,255,255,.10), rgba(255,255,255,0) 70%);
+    filter:blur(18px);
+    animation:mistMove 12s ease-in-out infinite alternate;
+    z-index:0;
+  }
+
+  .mist.m2 {
+    bottom:120px;
+    height:180px;
+    opacity:.6;
+    animation-duration:18s;
+  }
+
+  .glow {
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 65% 12%, rgba(255,220,130,.08), transparent 18%),
+      radial-gradient(circle at 50% 20%, rgba(255,210,100,.06), transparent 22%);
+    animation:glowPulse 6s ease-in-out infinite;
+    z-index:0;
+  }
+
+  .sparkles {
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1;
+    overflow:hidden;
+  }
+
+  .sparkle {
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:#f7e3a4;
+    box-shadow:0 0 10px rgba(247,227,164,.9);
+    animation:twinkle 4s ease-in-out infinite;
+    opacity:.8;
+  }
+
+  .wrap {
+    max-width:1220px;
+    margin:0 auto;
+    padding:18px 18px 42px;
+    position:relative;
+    z-index:2;
+  }
+
+  .hero {
+    margin-top:-120px;
+    text-align:center;
+    padding:0 10px 8px;
+    position:relative;
+    z-index:3;
+  }
+
+  h1 {
+    margin:0;
+    color:var(--gold);
+    font-size:clamp(2.3rem,4vw,3.9rem);
+    text-shadow:0 3px 18px rgba(0,0,0,.48);
+    font-weight:700;
+  }
+
+  .quote-bar {
+    margin:18px auto 0;
+    max-width:880px;
+    padding:14px 18px;
+    background:linear-gradient(180deg, rgba(14,22,34,.90), rgba(9,15,24,.96));
+    border:1px solid rgba(216,184,107,.30);
+    border-radius:999px;
+    color:var(--gold-2);
+    box-shadow:0 12px 26px rgba(0,0,0,.34);
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+
+  .pill-row {
+    margin-top:18px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .pill {
+    padding:12px 22px;
+    border-radius:999px;
+    background:linear-gradient(180deg, rgba(15,23,34,.90), rgba(9,15,24,.96));
+    border:1px solid rgba(216,184,107,.22);
+    color:var(--gold);
+    font-weight:700;
+    box-shadow:0 12px 26px rgba(0,0,0,.34);
+    backdrop-filter:blur(5px);
+  }
+
+  .section-title {
+    margin:30px 0 14px;
+    color:var(--gold-2);
+    font-size:1.9rem;
+    text-align:center;
+    text-shadow:0 2px 12px rgba(0,0,0,.25);
+  }
+
+  .grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:26px;
+    margin-top:18px;
+  }
+
+  .card {
+    background:linear-gradient(180deg, rgba(7,13,21,.78), rgba(6,12,20,.86));
+    border:2px solid rgba(187, 204, 226, .62);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(5px);
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
+
+  .card:hover {
+    transform:translateY(-8px);
+    box-shadow:0 24px 58px rgba(0,0,0,.5), 0 0 28px rgba(216,184,107,.12);
+    border-color:rgba(216,184,107,.55);
+  }
+
+  .card-head {
+    display:grid;
+    grid-template-columns:1.12fr .88fr;
+    min-height:226px;
+    border-bottom:1px solid rgba(229,208,151,.16);
+    background:
+      linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.24)),
+      linear-gradient(135deg, rgba(52,40,28,.78), rgba(18,40,41,.78));
+  }
+
+  .head-text {
+    padding:16px 18px 12px;
+  }
+
+  .eyebrow {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:var(--gold-2);
+    font-size:.96rem;
+    margin-bottom:8px;
+  }
+
+  .icon-chip {
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:rgba(216,184,107,.16);
+    border:1px solid rgba(216,184,107,.36);
+    box-shadow:0 0 16px rgba(216,184,107,.10);
+    flex:0 0 auto;
+  }
+
+  .card h2 {
+    margin:0 0 8px;
+    color:var(--gold-2);
+    font-size:clamp(1.35rem, 1.8vw, 1.9rem);
+    line-height:1.16;
+    text-shadow:0 2px 12px rgba(0,0,0,.25);
+  }
+
+  .question {
+    font-size:1rem;
+    color:#f4ecd3;
+    margin-bottom:8px;
+    line-height:1.5;
+  }
+
+  .small-label {
+    font-size:.95rem;
+    color:var(--gold);
+    margin-bottom:4px;
+  }
+
+  .options {
+    margin:0;
+    padding-left:22px;
+    line-height:1.65;
+    color:#f4ecd3;
+    font-size:.98rem;
+  }
+
+  .options li::marker {
+    color:var(--gold);
+  }
+
+  .art {
+    display:grid;
+    place-items:center;
+    padding:10px;
+    border-left:1px solid rgba(229,208,151,.14);
+    background:
+      radial-gradient(circle at 70% 30%, rgba(255,220,140,.12), transparent 26%),
+      linear-gradient(135deg, rgba(23,34,45,.95), rgba(58,41,24,.92));
+  }
+
+  .art svg {
+    width:100%;
+    height:100%;
+    max-height:208px;
+    display:block;
+    filter:drop-shadow(0 12px 18px rgba(0,0,0,.30));
+  }
+
+  .note-wrap {
+    padding:16px 16px 18px;
+  }
+
+  textarea {
+    width:100%;
+    min-height:122px;
+    resize:vertical;
+    border:none;
+    outline:none;
+    border-radius:14px;
+    padding:16px 16px;
+    background:var(--paper);
+    color:#2f281c;
+    font:16px/1.55 "Trebuchet MS", Arial, sans-serif;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+  }
+
+  .controls {
+    display:flex;
+    gap:12px;
+    margin-top:12px;
+    flex-wrap:wrap;
+  }
+
+  button {
+    border:none;
+    border-radius:999px;
+    padding:12px 18px;
+    cursor:pointer;
+    font:700 1rem Georgia, serif;
+    color:#241d12;
+    background:linear-gradient(180deg, #ead8a7, #cdaa57);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:0 10px 20px rgba(0,0,0,.28);
+    transition:transform .15s ease, filter .15s ease;
+  }
+
+  button:hover {
+    transform:translateY(-1px);
+    filter:brightness(1.04);
+  }
+
+  .help-box {
+    margin-top:28px;
+    padding:18px 20px;
+    background:rgba(8,14,20,.72);
+    border:1px solid rgba(187,203,220,.35);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(4px);
+  }
+
+  .help-box h3 {
+    color:var(--gold);
+    margin:0 0 10px;
+  }
+
+  .help-box p, .help-box li {
+    color:var(--muted);
+    line-height:1.7;
+  }
+
+  .help-columns {
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
+    margin-top:14px;
+  }
+
+  @keyframes mistMove {
+    from { transform:translateX(-2%); }
+    to { transform:translateX(2%); }
+  }
+
+  @keyframes glowPulse {
+    0%,100% { opacity:.45; }
+    50% { opacity:.9; }
+  }
+
+  @keyframes twinkle {
+    0%,100% { opacity:.15; transform:scale(.7); }
+    50% { opacity:1; transform:scale(1.5); }
+  }
+
+  @media (max-width: 930px) {
+    .grid { grid-template-columns:1fr; }
+    .hero { margin-top:-70px; }
+    .help-columns { grid-template-columns:1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .header-image { height:420px; }
+    .card-head { grid-template-columns:1fr; }
+    .art {
+      border-left:none;
+      border-top:1px solid rgba(229,208,151,.14);
+      min-height:180px;
+    }
+    .pill-row { gap:10px; }
+    .pill { padding:10px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="header-image"><div class="header-overlay"></div></div>
+<div class="glow"></div>
+<div class="mist"></div>
+<div class="mist m2"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>🪄 Tajemná komnata – rozhodování</h1>
+
+    <div class="quote-bar">
+      <button id="dumbledoreBtn" type="button">🔊 Přehrát hlas</button>
+      <span>„O tom jací doopravdy jsme, nesvědčí naše schopnosti, ale naše volby.“</span>
+    </div>
+
+    <div class="pill-row">
+      <div class="pill">🏰 Bradavice</div>
+      <div class="pill">✨ kouzlo</div>
+      <div class="pill">📝 poznámky</div>
+    </div>
+  </section>
+
+  <h2 class="section-title">⚡ Hypotetické situace – Tajemná komnata + reálný život</h2>
+
+  <section class="grid">
+
+    <!-- 1 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">📖</span><span>Situace 1</span></div>
+          <h2>Najdeš tajemný deník</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>budu si do něj psát a zkoumat ho</li>
+            <li>někomu ho ukážu</li>
+            <li>schovám si ho pro sebe</li>
+            <li>pokusím se zjistit jeho původ</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#3b2a1d"/>
+                <stop offset="100%" stop-color="#16222a"/>
+              </linearGradient>
+              <linearGradient id="cov1" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7f512e"/>
+                <stop offset="100%" stop-color="#432616"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg1)"/>
+            <rect x="86" y="34" width="88" height="102" rx="8" fill="url(#cov1)" transform="rotate(12 130 85)"/>
+            <rect x="98" y="44" width="62" height="82" rx="6" fill="#94653f" opacity=".55" transform="rotate(12 130 85)"/>
+            <path d="M111 59 L149 67" stroke="#d9b87b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M117 76 L154 84" stroke="#d9b87b" stroke-width="2" opacity=".8" stroke-linecap="round"/>
+            <circle cx="210" cy="34" r="16" fill="#d8b86b" opacity=".18"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 2 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🧱</span><span>Situace 2</span></div>
+          <h2>Slyšíš hlas ve zdi</h2>
+          <div class="question">👉 Nikdo jiný ho neslyší. Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>půjdu za tím hlasem</li>
+            <li>budu to ignorovat</li>
+            <li>řeknu to učiteli</li>
+            <li>využiju to ve svůj prospěch</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1d3130"/>
+                <stop offset="100%" stop-color="#12201d"/>
+              </linearGradient>
+              <radialGradient id="g2" cx="70%" cy="50%" r="40%">
+                <stop offset="0%" stop-color="#b2ff93"/>
+                <stop offset="60%" stop-color="#5bc96a" stop-opacity=".75"/>
+                <stop offset="100%" stop-color="#5bc96a" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg2)"/>
+            <g opacity=".35" stroke="#6e8178">
+              <path d="M0 42 H260"/><path d="M0 80 H260"/><path d="M0 118 H260"/>
+              <path d="M43 0 V160"/><path d="M87 0 V160"/><path d="M130 0 V160"/><path d="M173 0 V160"/><path d="M216 0 V160"/>
+            </g>
+            <circle cx="190" cy="80" r="46" fill="url(#g2)"/>
+            <path d="M156 96 C172 68, 192 64, 206 80 C220 94, 236 94, 244 84" fill="none" stroke="#88f59a" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="244" cy="84" r="4" fill="#b2ffbb"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 3 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🫥</span><span>Situace 3</span></div>
+          <h2>Spolužáci začnou mizet</h2>
+          <div class="question">👉 Jak reaguješ?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>snažím se pomoct</li>
+            <li>bojím se a držím se stranou</li>
+            <li>využiju chaosu</li>
+            <li>hledám viníka</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#12242f"/>
+                <stop offset="100%" stop-color="#1f382d"/>
+              </linearGradient>
+              <radialGradient id="violet3" cx="62%" cy="50%" r="35%">
+                <stop offset="0%" stop-color="#d7a4ff"/>
+                <stop offset="100%" stop-color="#7e58b3" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg3)"/>
+            <circle cx="156" cy="80" r="48" fill="url(#violet3)" opacity=".8"/>
+            <path d="M140 48 q16 -14 38 0 q18 11 14 32 q-5 30 -34 39 q-30 -7 -37 -31 q-6 -25 19 -40z" fill="#8d63c7" stroke="#d6c0ff" stroke-width="3"/>
+            <path d="M126 88 q32 16 64 0" stroke="#d6c0ff" stroke-width="2.4" opacity=".8"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🚪</span><span>Situace 4</span></div>
+          <h2>Zjistíš, kde je vstup do Tajemné komnaty</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>okamžitě to někomu řeknu</li>
+            <li>půjdu tam sám</li>
+            <li>nechám si to pro sebe</li>
+            <li>zkusím to využít</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1a2b2e"/>
+                <stop offset="100%" stop-color="#23311d"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg4)"/>
+            <ellipse cx="130" cy="116" rx="44" ry="18" fill="#23382f"/>
+            <ellipse cx="130" cy="88" rx="32" ry="52" fill="#15271f" stroke="#8ea796" stroke-width="3"/>
+            <path d="M130 50 L114 88 L146 88 Z" fill="#d7b56d"/>
+            <circle cx="130" cy="98" r="4" fill="#f2e3b5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 5 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">⚠️</span><span>Situace 5</span></div>
+          <h2>Vidíš, že někdo je v nebezpečí</h2>
+          <div class="question">👉 Jak se zachováš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>pomůžu bez váhání</li>
+            <li>zavolám pomoc</li>
+            <li>uteču</li>
+            <li>nechám to být</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg5" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#13231d"/>
+                <stop offset="100%" stop-color="#2e2c1c"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg5)"/>
+            <circle cx="80" cy="54" r="18" fill="#eadfc5"/>
+            <circle cx="180" cy="54" r="18" fill="#eadfc5"/>
+            <path d="M80 78 q0 34 -26 46" stroke="#8b1f1f" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M180 78 q0 34 26 46" stroke="#7dd48a" stroke-width="8" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 6 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🪄</span><span>Situace 6</span></div>
+          <h2>Máš moc někoho ovládat</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>nikdy to nepoužiju</li>
+            <li>použiju to jen v krajní situaci</li>
+            <li>vyzkouším to</li>
+            <li>využiju to systematicky</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg6" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2e2419"/>
+                <stop offset="100%" stop-color="#142330"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg6)"/>
+            <rect x="86" y="84" width="96" height="8" rx="4" fill="#6c4729" transform="rotate(-18 86 84)"/>
+            <path d="M168 54 l24 14 l-10 10 z" fill="#d8b56d"/>
+            <path d="M128 72 q16 -26 38 -26" stroke="#f4e8bf" stroke-width="3" fill="none"/>
+            <circle cx="120" cy="70" r="18" fill="#d8b56d" opacity=".15"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 7 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🛡️</span><span>Situace 7</span></div>
+          <h2>Můžeš zachránit jednoho člověka, ale riskuješ sebe</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>obětuju se</li>
+            <li>hledám jiné řešení</li>
+            <li>neriskuju</li>
+            <li>rozhodnu se podle situace</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg7" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#19322d"/>
+                <stop offset="100%" stop-color="#1b2434"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg7)"/>
+            <path d="M130 34 l42 14 v28 c0 28-19 47-42 58c-23-11-42-30-42-58V48z" fill="#d8b86b" opacity=".9"/>
+            <path d="M130 48 l28 9 v19 c0 19-11 32-28 41c-17-9-28-22-28-41V57z" fill="#2e4851"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 8 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">⚖️</span><span>Situace 8</span></div>
+          <h2>Někdo tě neprávem obviní</h2>
+          <div class="question">👉 Jak budeš reagovat?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>budu se hned bránit</li>
+            <li>zkusím zjistit, kdo to udělal</li>
+            <li>stáhnu se a budu mlčet</li>
+            <li>využiju situaci proti ostatním</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg8" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1f2836"/>
+                <stop offset="100%" stop-color="#2f241c"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg8)"/>
+            <path d="M130 36 V120" stroke="#d8b86b" stroke-width="6"/>
+            <path d="M86 56 H174" stroke="#d8b86b" stroke-width="5"/>
+            <path d="M86 56 l-18 30 h36z" fill="#c8d4d8"/>
+            <path d="M174 56 l-18 30 h36z" fill="#c8d4d8"/>
+            <rect x="112" y="120" width="36" height="8" rx="4" fill="#d8b86b"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 9 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🤫</span><span>Situace 9</span></div>
+          <h2>Zjistíš tajemství, které by mohlo někomu zničit pověst</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>nechám si to pro sebe</li>
+            <li>řeknu to jen tomu člověku</li>
+            <li>použiju to, když se mi to bude hodit</li>
+            <li>oznámím to autoritě</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg9" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1a2a30"/>
+                <stop offset="100%" stop-color="#2d2228"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg9)"/>
+            <circle cx="130" cy="80" r="34" fill="#eadfc5"/>
+            <circle cx="130" cy="80" r="10" fill="#14212a"/>
+            <path d="M104 114 q26 -14 52 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 10 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">👥</span><span>Situace 10</span></div>
+          <h2>Tvůj kamarád udělá něco nebezpečného</h2>
+          <div class="question">👉 Jak se zachováš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>půjdu mu pomoct</li>
+            <li>pokusím se ho zastavit</li>
+            <li>nechám ho, ať si poradí sám</li>
+            <li>využiju toho, že udělal chybu</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg10" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#16272c"/>
+                <stop offset="100%" stop-color="#233126"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg10)"/>
+            <circle cx="95" cy="58" r="18" fill="#eadfc5"/>
+            <circle cx="165" cy="58" r="18" fill="#eadfc5"/>
+            <path d="M78 112 q17 -26 34 0" stroke="#7dd48a" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M148 112 q17 -26 34 0" stroke="#d8b86b" stroke-width="8" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 11 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">👁️</span><span>Situace 11</span></div>
+          <h2>Dozvíš se, že tě někdo tajně sleduje</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>postavím se tomu člověku</li>
+            <li>požádám o pomoc</li>
+            <li>budu dělat, že o tom nevím</li>
+            <li>zkusím sledování obrátit ve svůj prospěch</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg11" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1a2b2b"/>
+                <stop offset="100%" stop-color="#1e2234"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg11)"/>
+            <path d="M54 80 q38 -42 76 -42 q38 0 76 42 q-38 42 -76 42 q-38 0 -76 -42z" fill="#dfe7e2"/>
+            <circle cx="130" cy="80" r="24" fill="#7dd48a"/>
+            <circle cx="130" cy="80" r="10" fill="#0c1714"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 12 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">📣</span><span>Situace 12</span></div>
+          <h2>Všichni panikaří, ale ty máš důležitou informaci</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>hned ji řeknu všem</li>
+            <li>řeknu ji jen jednomu člověku</li>
+            <li>nechám si ji pro sebe</li>
+            <li>počkám, jestli mi ta informace nebude užitečná později</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg12" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#202a36"/>
+                <stop offset="100%" stop-color="#203325"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg12)"/>
+            <path d="M72 90 l56 -28 v56 l-56 -28z" fill="#d8b86b"/>
+            <rect x="60" y="80" width="18" height="20" rx="4" fill="#eadfc5"/>
+            <path d="M138 70 q24 10 34 28" stroke="#eadfc5" stroke-width="4" fill="none"/>
+            <path d="M142 56 q38 18 52 48" stroke="#eadfc5" stroke-width="3" fill="none" opacity=".75"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 13 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">💬</span><span>Situace 13</span></div>
+          <h2>Ve třídě nebo v práci se šíří pomluva</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>zastanu se toho člověka</li>
+            <li>nebudu se do toho plést</li>
+            <li>budu chtít vědět víc</li>
+            <li>využiju situaci, pokud mi to pomůže</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg13" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1d2230"/>
+                <stop offset="100%" stop-color="#2f2420"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg13)"/>
+            <circle cx="92" cy="68" r="18" fill="#eadfc5"/>
+            <circle cx="154" cy="68" r="18" fill="#eadfc5"/>
+            <path d="M78 100 q18 -12 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
+            <path d="M140 100 q18 -12 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 14 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">👛</span><span>Situace 14</span></div>
+          <h2>Najdeš cizí mobil nebo peněženku</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>hned ji vrátím</li>
+            <li>pokusím se zjistit, komu patří</li>
+            <li>nechám si ji u sebe a budu přemýšlet</li>
+            <li>podívám se, co je uvnitř</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg14" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2d241d"/>
+                <stop offset="100%" stop-color="#20333b"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg14)"/>
+            <rect x="74" y="56" width="112" height="66" rx="12" fill="#6b4a2a"/>
+            <rect x="86" y="70" width="72" height="38" rx="8" fill="#e7dcc2"/>
+            <circle cx="172" cy="90" r="12" fill="#d8b86b"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 15 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">📝</span><span>Situace 15</span></div>
+          <h2>Máš možnost podvádět u testu nebo zkoušky</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>nikdy bych to neudělal(a)</li>
+            <li>udělal(a) bych to jen v krajní situaci</li>
+            <li>zkusil(a) bych to</li>
+            <li>využil(a) bych toho bez výčitek</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg15" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1f2c3b"/>
+                <stop offset="100%" stop-color="#2a3020"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg15)"/>
+            <rect x="64" y="40" width="132" height="88" rx="10" fill="#efe5cb"/>
+            <path d="M88 68 H172 M88 84 H166 M88 100 H150" stroke="#7b6b4a" stroke-width="3"/>
+            <path d="M176 46 l20 20" stroke="#d8b86b" stroke-width="6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 16 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🚶</span><span>Situace 16</span></div>
+          <h2>Vidíš, že někoho ve škole nebo v práci vylučují z kolektivu</h2>
+          <div class="question">👉 Jak zareaguješ?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>půjdu za tím člověkem</li>
+            <li>budu to jen pozorovat</li>
+            <li>nebudu riskovat, že se to obrátí proti mně</li>
+            <li>využiju situaci, abych si sám/sama polepšil(a)</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg16" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1d2536"/>
+                <stop offset="100%" stop-color="#223120"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg16)"/>
+            <circle cx="80" cy="72" r="16" fill="#eadfc5"/>
+            <circle cx="130" cy="72" r="16" fill="#eadfc5"/>
+            <circle cx="180" cy="72" r="16" fill="#eadfc5" opacity=".45"/>
+            <path d="M64 106 q16 -12 32 0 M114 106 q16 -12 32 0 M164 106 q16 -12 32 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 17 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🔒</span><span>Situace 17</span></div>
+          <h2>Někdo tě požádá, abys zatajil(a) pravdu</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>odmítnu</li>
+            <li>udělám to, pokud tím někoho ochráním</li>
+            <li>budu váhat</li>
+            <li>využiju to jako výhodu</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg17" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1f2836"/>
+                <stop offset="100%" stop-color="#2d231f"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg17)"/>
+            <rect x="92" y="72" width="76" height="54" rx="10" fill="#d8b86b"/>
+            <path d="M108 72 v-8 q0 -22 22 -22 q22 0 22 22 v8" stroke="#eadfc5" stroke-width="8" fill="none"/>
+            <circle cx="130" cy="96" r="8" fill="#7b6b4a"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 18 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🧑‍🤝‍🧑</span><span>Situace 18</span></div>
+          <h2>Dostaneš se do skupiny, kde mají ostatní špatný vliv</h2>
+          <div class="question">👉 Jak se zachováš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>odejdu</li>
+            <li>zkusím ostatní ovlivnit k lepšímu</li>
+            <li>přizpůsobím se</li>
+            <li>využiju situaci pro svůj prospěch</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg18" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1d2433"/>
+                <stop offset="100%" stop-color="#203026"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg18)"/>
+            <circle cx="88" cy="58" r="15" fill="#eadfc5"/>
+            <circle cx="130" cy="50" r="16" fill="#eadfc5"/>
+            <circle cx="172" cy="58" r="15" fill="#eadfc5"/>
+            <path d="M70 100 q18 -14 36 0 M112 98 q18 -16 36 0 M154 100 q18 -14 36 0" stroke="#d8b86b" stroke-width="5" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 19 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🎯</span><span>Situace 19</span></div>
+          <h2>Můžeš získat výhodu, ale nebylo by to fér</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>odmítnu to</li>
+            <li>vezmu to, když nikomu neublížím</li>
+            <li>budu o tom dlouho přemýšlet</li>
+            <li>využiju každou příležitost</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg19" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2b231d"/>
+                <stop offset="100%" stop-color="#21313a"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg19)"/>
+            <circle cx="130" cy="78" r="38" fill="#d8b86b"/>
+            <path d="M130 46 l8 20 l22 2 l-16 14 l5 21 l-19 -11 l-19 11 l5 -21 l-16 -14 l22 -2z" fill="#fff0c2"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+    <!-- 20 -->
+    <article class="card">
+      <div class="card-head">
+        <div class="head-text">
+          <div class="eyebrow"><span class="icon-chip">🤝</span><span>Situace 20</span></div>
+          <h2>Někdo slabší potřebuje pomoc, ale ostatní mlčí</h2>
+          <div class="question">👉 Co uděláš?</div>
+          <div class="small-label">Možné reakce:</div>
+          <ul class="options">
+            <li>ozvu se jako první</li>
+            <li>půjdu pro pomoc</li>
+            <li>budu doufat, že zasáhne někdo jiný</li>
+            <li>nebudu se míchat do cizích věcí</li>
+          </ul>
+        </div>
+        <div class="art">
+          <svg viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg20" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1e2d27"/>
+                <stop offset="100%" stop-color="#20243a"/>
+              </linearGradient>
+            </defs>
+            <rect width="260" height="160" rx="16" fill="url(#bg20)"/>
+            <path d="M86 94 q14 -18 28 0 q14 18 28 0 q14 -18 28 0" stroke="#eadfc5" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <circle cx="100" cy="66" r="14" fill="#d8b86b"/>
+            <circle cx="160" cy="66" r="14" fill="#7dd48a"/>
+          </svg>
+        </div>
+      </div>
+      <div class="note-wrap">
+        <textarea placeholder="Tvoje rozhodnutí, zdůvodnění a poznámky..."></textarea>
+        <div class="controls"><button onclick="clearText(this)">Vymazat poznámky</button></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section class="help-box">
+    <h3>🎭 Jak s tím pracovat ve hře</h3>
+    <p><b>Varianta A – rychlá:</b> Ty čteš situace a studenti odpovídají spontánně podle role.</p>
+    <p><b>Varianta B – hlubší:</b> Student musí vybrat řešení, zdůvodnit ho a reagovat na doplňující otázku učitele.</p>
+    <ul>
+      <li>👉 „Proč bys to tajil?“</li>
+      <li>👉 „Proč bys riskoval?“</li>
+      <li>👉 „Proč je pro tebe důležitější bezpečí než pravda?“</li>
+    </ul>
+
+    <div class="help-columns">
+      <div>
+        <h3>Dědic Zmijozelu</h3>
+        <ul>
+          <li>manipulace</li>
+          <li>zájem o moc</li>
+          <li>využívání chaosu</li>
+          <li>tajnůstkářství</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Oběť baziliška</h3>
+        <ul>
+          <li>strach</li>
+          <li>pasivita</li>
+          <li>hledání ochrany</li>
+          <li>opatrnost</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hrdina</h3>
+        <ul>
+          <li>odvaha</li>
+          <li>ochrana druhých</li>
+          <li>smysl pro spravedlnost</li>
+          <li>ochota riskovat</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function clearText(button){
+    const box = button.closest(".note-wrap").querySelector("textarea");
+    box.value = "";
+  }
+
+  // Třpytky
+  const sparkleWrap = document.getElementById("sparkles");
+  for(let i=0;i<55;i++){
+    const s = document.createElement("div");
+    s.className = "sparkle";
+    s.style.left = Math.random()*100 + "vw";
+    s.style.top = Math.random()*100 + "vh";
+    s.style.animationDelay = (Math.random()*4) + "s";
+    s.style.opacity = 0.15 + Math.random()*0.85;
+    sparkleWrap.appendChild(s);
+  }
+
+  // Citát systémovým hlasem prohlížeče
+  const quote = "O tom jací doopravdy jsme, nesvědčí naše schopnosti, ale naše volby.";
+  const btn = document.getElementById("dumbledoreBtn");
+
+  function speakQuote(){
+    if(!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(quote);
+    u.lang = "cs-CZ";
+    u.rate = 0.9;
+    u.pitch = 0.8;
+    const voices = speechSynthesis.getVoices();
+    const preferred =
+      voices.find(v => v.lang && v.lang.toLowerCase().startsWith("cs")) ||
+      voices.find(v => v.name.toLowerCase().includes("male"));
+    if(preferred) u.voice = preferred;
+    speechSynthesis.speak(u);
+  }
+
+  btn.addEventListener("click", speakQuote);
+
+  // Zvuk pera na pergamenu při psaní
+  let audioCtx = null;
+
+  function ensureAudio(){
+    if(!audioCtx){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(Ctx) audioCtx = new Ctx();
+    }
+    if(audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  }
+
+  function playScratch(){
+    ensureAudio();
+    if(!audioCtx) return;
+
+    const duration = 0.06;
+    const bufferSize = audioCtx.sampleRate * duration;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+
+    for(let i=0;i<bufferSize;i++){
+      data[i] = (Math.random()*2-1) * (1 - i/bufferSize) * 0.18;
+    }
+
+    const src = audioCtx.createBufferSource();
+    src.buffer = buffer;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = "bandpass";
+    filter.frequency.value = 1800 + Math.random()*700;
+    filter.Q.value = 0.8;
+
+    const gain = audioCtx.createGain();
+    gain.gain.value = 0.16;
+
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    src.start();
+  }
+
+  document.querySelectorAll("textarea").forEach(area => {
+    area.addEventListener("keydown", () => {
+      playScratch();
+    });
+    area.addEventListener("focus", ensureAudio);
+  });
+</script>
+</body>
+</html>
